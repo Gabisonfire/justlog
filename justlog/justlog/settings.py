@@ -11,7 +11,7 @@ class Settings():
         self.log_output = Output.STDOUT
         self.log_file = f"/tmp/{self.app_name}"
         self.fields = {}
-        self.string_format = []
+        self.string_format = ""
         self.timestamp_format = "%Y-%m-%d %X.%f"
     def update_field(self, key, value):
         self.fields.update({key:value})

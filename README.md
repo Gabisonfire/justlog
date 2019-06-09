@@ -12,8 +12,9 @@ justlog is a simple library for Python 3. It is designed to provide a quick and 
 
 ### Roadmap ###
 
-- readthedocs
 - logging to http
+- proper docstrings (sorry)
 
 ### License ###
-MIT
+
+- MIT
