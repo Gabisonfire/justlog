@@ -4,7 +4,6 @@ name: default
 steps:
 - name: build on pypi
   image: python:3.7.3-alpine3.9
-  failure: ignore
   environment:
     PYPI_PW:
       from_secret: pypi-pw
@@ -15,11 +14,6 @@ steps:
 
 - name: push to Github
   image: alpine/git
-  depends_on:
-  - build on pypi
-  trigger:
-    status:
-    - success
   environment:
     SSH_KEY:
       from_secret: gab-key
@@ -43,8 +37,6 @@ steps:
 
 - name: update doc
   image: alpine
-  depends_on: 
-  - push to Github
   environment:
     TOKEN:
       from_secret: rdd-token
