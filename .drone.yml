@@ -1,8 +1,8 @@
 kind: pipeline
-name: pypi
+name: default
 
 steps:
-- name: build
+- name: build on pypi
   image: python:3.7.3-alpine3.9
   failure: ignore
   environment:
@@ -13,11 +13,14 @@ steps:
   - pip install twine
   - python3 -m twine upload -u Gabisonfire -p "$PYPI_PW" dist/*
 
-- name: github
+- name: push to Github
   image: alpine/git
+  failure: ignore
   environment:
     SSH_KEY:
       from_secret: gab-key
+    EMAIL:
+      from_secret: email
   commands:
   - mkdir ~/.ssh
   - ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
@@ -27,11 +30,17 @@ steps:
   - apk add rsync
   - rsync -av --exclude=.git . /tmp/justlog
   - ls -la /tmp/justlog
-  - git config --global user.email "gab.despres@gmail.com"
+  - git config --global user.email "$EMAIL"
   - git config --global user.name "Gabisonfire"
   - cd /tmp/justlog
   - git add -A .
-  - git commit -am "Latest build from CI" 
+  - git commit -am "$DRONE_COMMIT_MESSAGE"
   - git push
 
-    #- name: doc
+- name: update doc
+  image: alpine
+  environment:
+    TOKEN:
+      from_secret: rdd-token
+  commands:
+  - curl -X POST -d "branches=master" -d "token=$TOKEN" https://readthedocs.org/api/v2/webhook/justlog/88460/
