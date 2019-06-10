@@ -39,6 +39,8 @@ steps:
 
 - name: update doc
   image: alpine
+  depends_on: 
+  - push to Github
   environment:
     TOKEN:
       from_secret: rdd-token
