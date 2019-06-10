@@ -43,4 +43,5 @@ steps:
     TOKEN:
       from_secret: rdd-token
   commands:
+  - apk add curl
   - curl -X POST -d "branches=master" -d "token=$TOKEN" https://readthedocs.org/api/v2/webhook/justlog/88460/
