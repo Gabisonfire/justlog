@@ -1,4 +1,6 @@
 import syslog
+import sys
+import socket
 from colorama import init, Fore
 from .settings import Settings
 from .classes import Severity, Output, Format
@@ -24,10 +26,14 @@ class Logger(Settings):
             self.settings = text_formatter(self.settings)
         if self.settings.log_output == Output.STDOUT:
             log_to_stdout(self.settings)
+        if self.settings.log_output == Output.STDERR:
+            log_to_stderr(self.settings)
         if self.settings.log_output == Output.FILE:
             log_to_file(self.settings.message, self.settings.log_file)
         if self.settings.log_output == Output.SYSLOG:
             log_to_sys(self.settings.message, self.settings.current_log_level)
+        if self.settings.log_output == Output.TCP:
+            log_to_tcp(self.settings.message, self.settings)
         self.settings.message = ""
     def debug(self, message):
         self.settings.current_log_level = Severity.DBG
@@ -52,6 +58,16 @@ def log_to_stdout(settings: Settings):
             color = Fore.RED
     print(f"{color}{settings.message}{reset}")
 
+def log_to_stderr(settings: Settings):
+    reset = Fore.RESET
+    color = Fore.WHITE
+    if settings.colorized_logs:
+        if settings.current_log_level == Severity.WRN:
+            color = Fore.YELLOW
+        if settings.current_log_level == Severity.ERR:
+            color = Fore.RED
+    print(f"{color}{settings.message}{reset}", file=sys.stderr)
+
 def log_to_file(message, log_file):
     f = open(log_file, "a+")
     f.write(message + "\n")
@@ -66,3 +82,9 @@ def log_to_sys(message, severity):
         syslog.syslog(syslog.LOG_WARNING, message)
     if severity == Severity.ERR:
         syslog.syslog(syslog.LOG_ERR, message)
+
+def log_to_tcp(message, settings):
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        sock.connect((settings.tcp_output_host, settings.tcp_output_port))
+        sock.sendall(bytes(message + "\n", "utf-8"))
+        sock.close()

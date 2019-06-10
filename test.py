@@ -15,7 +15,7 @@ logger_json.settings.update_field("level", "$CURRENT_LOG_LEVEL")
 logger_json.settings.update_field("timestamp", "$TIMESTAMP")
 
 logger_stdout.settings.colorized_logs = True
-logger_stdout.settings.log_output = Output.STDOUT
+logger_stdout.settings.log_output = Output.TCP
 logger_stdout.settings.update_field("application", "sample")
 logger_stdout.settings.update_field("timestamp", "$TIMESTAMP")
 logger_stdout.settings.update_field("level", "$CURRENT_LOG_LEVEL")

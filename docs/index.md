@@ -46,7 +46,7 @@ Instances must be initialized with a `Settings` instance that can be customized 
     - `TEXT` `JSON`
 - `log_output: Output`
     - Defines where the logs are output
-    - `STDOUT` `FILE` `SYSLOG`
+    - `STDOUT` `STDERR` `TCP` `FILE` `SYSLOG`
 - `string_format: str`
     - Defines the template and fields for logs output in the `TEXT` format
 - `timestamp_format`
@@ -55,6 +55,10 @@ Instances must be initialized with a `Settings` instance that can be customized 
     - Adds or updates a field that will be output to the logs. Fields can be reffered using the `$` symbol within the `string_format`
 - `delete_field(key: str)`
     - Removes a field
+- `tcp_output_host(host: str)`
+    - Sets the tcp output host
+- `tcp_output_port(port: int)`
+    - Sets the tcp output port
 
 ### Builtin Variables ###
 - `$TIMESTAMP`

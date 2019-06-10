@@ -13,6 +13,8 @@ class Settings():
         self.fields = {}
         self.string_format = ""
         self.timestamp_format = "%Y-%m-%d %X.%f"
+        self.tcp_output_host = ""
+        self.tcp_output_port = 5000
     def update_field(self, key, value):
         self.fields.update({key:value})
     def delete_field(self, key):

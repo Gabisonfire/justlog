@@ -37,6 +37,12 @@ logger_stdout.warning("Warning")
 logger_stdout.debug("Debug")
 ```
 
+### Installation ###
+
+```python
+pip install justlog
+```
+
 ### License ###
 
 - MIT

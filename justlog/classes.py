@@ -12,5 +12,8 @@ class Format(Enum):
 
 class Output(Enum):
     STDOUT = 0
-    FILE = 1
-    SYSLOG = 2
+    STDERR = 1
+    FILE = 2
+    SYSLOG = 3
+    HTTP = 4
+    TCP = 5

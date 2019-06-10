@@ -27,7 +27,6 @@ steps:
   - git clone git@github.com:Gabisonfire/justlog.git /tmp/justlog
   - apk add rsync
   - rsync -av --exclude=.git . /tmp/justlog
-  - ls -la /tmp/justlog
   - git config --global user.email "$EMAIL"
   - git config --global user.name "Gabisonfire"
   - cd /tmp/justlog
