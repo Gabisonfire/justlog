@@ -2,6 +2,7 @@ __pycache__/
 .vscode/
 .pylintrc
 Pipfile.lock
+.drone.yml.swp
 
 # Distribution / packaging
 .Python

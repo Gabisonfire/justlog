@@ -1,0 +1,37 @@
+kind: pipeline
+name: pypi
+
+steps:
+- name: build
+  image: python:3.7.3-alpine3.9
+  failure: ignore
+  environment:
+    PYPI_PW:
+      from_secret: pypi-pw
+  commands:
+  - python3 setup.py sdist bdist_wheel
+  - pip install twine
+  - python3 -m twine upload -u Gabisonfire -p "$PYPI_PW" dist/*
+
+- name: github
+  image: alpine/git
+  environment:
+    SSH_KEY:
+      from_secret: gab-key
+  commands:
+  - mkdir ~/.ssh
+  - ssh-keyscan -t rsa github.com >> ~/.ssh/known_hosts
+  - echo "$SSH_KEY" > ~/.ssh/id_rsa
+  - chmod 400 ~/.ssh/id_rsa
+  - git clone git@github.com:Gabisonfire/justlog.git /tmp/justlog
+  - apk add rsync
+  - rsync -av --exclude=.git . /tmp/justlog
+  - ls -la /tmp/justlog
+  - git config --global user.email "gab.despres@gmail.com"
+  - git config --global user.name "Gabisonfire"
+  - cd /tmp/justlog
+  - git add -A .
+  - git commit -am "Latest build from CI" 
+  - git push
+
+    #- name: doc
