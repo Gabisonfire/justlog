@@ -5,11 +5,11 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="justlog",
-    version="0.0.6",
+    version="0.0.7",
     author="Gabisonfire",
     author_email="gabisonfire@github.com",
     description="A simple logging library for Python 3",
-    keywords="logging json simple",
+    keywords="logging json simple http tcp quick logs",
     long_description=long_description,
     long_description_content_type="text/markdown",
     python_requires='>=3.*',
@@ -20,4 +20,8 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
+    install_requires=[
+          'colorama',
+          'requests'
+      ]
 )

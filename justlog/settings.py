@@ -8,13 +8,16 @@ class Settings():
         self.current_log_level = Severity.INF
         self.colorized_logs = False
         self.log_format = Format.TEXT
-        self.log_output = Output.STDOUT
+        self.log_output = []
         self.log_file = f"/tmp/{self.app_name}"
         self.fields = {}
         self.string_format = ""
         self.timestamp_format = "%Y-%m-%d %X.%f"
         self.tcp_output_host = ""
         self.tcp_output_port = 5000
+        self.http_url = ""
+        self.http_headers = {}
+        self.http_print_response = False
     def update_field(self, key, value):
         self.fields.update({key:value})
     def delete_field(self, key):

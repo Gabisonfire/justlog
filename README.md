@@ -6,15 +6,14 @@ justlog is a simple library for Python 3. It is designed to provide a quick and 
 
 ### Features ###
 
-- Output to to stdout, file or syslog
+- Output to to stdout, stderr, tcp, file or syslog
 - Output in standard text or json
 - Easily add fields
-- Builtin variables for timestamps and log level.
+- Builtin variables for timestamps and log levels.
 - Colorful output
 
 ### Roadmap ###
 
-- log output to http
 - proper docstrings (sorry)
 
 ### Quickstart ###

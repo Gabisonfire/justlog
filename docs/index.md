@@ -44,9 +44,9 @@ Instances must be initialized with a `Settings` instance that can be customized 
 - `log_format: Format`
     - Sets the log format type
     - `TEXT` `JSON`
-- `log_output: Output`
-    - Defines where the logs are output
-    - `STDOUT` `STDERR` `TCP` `FILE` `SYSLOG`
+- `log_output: [Output]`
+    - Defines where the logs are output. Must be a list, can include many.
+    - `STDOUT` `STDERR` `TCP` `FILE` `SYSLOG` `HTTP`
 - `string_format: str`
     - Defines the template and fields for logs output in the `TEXT` format
 - `timestamp_format`
@@ -59,7 +59,12 @@ Instances must be initialized with a `Settings` instance that can be customized 
     - Sets the tcp output host
 - `tcp_output_port(port: int)`
     - Sets the tcp output port
-
+- `http_url(url: str`
+    - Sets the http output url
+- `http_headers(header: dict)`
+    - Optional headers to pass to the post request
+-  `http_print_response(bool)`
+    - Prints the http call response to stdout when True
 ### Builtin Variables ###
 - `$TIMESTAMP`
     - Will print the current time in the format defined by the `timestamp_format` setting using [stfrtime codes](http://strftime.org/)

@@ -1,6 +1,7 @@
 import syslog
 import sys
 import socket
+import requests
 from colorama import init, Fore
 from .settings import Settings
 from .classes import Severity, Output, Format
@@ -16,24 +17,27 @@ class Logger(Settings):
         self.settings.message = message
         if not isinstance(self.settings.log_format, Format):
             raise TypeError(f"Unsupported or unrecognized format: {type(self.settings.log_format)}")
-        if not isinstance(self.settings.log_output, Output):
-            raise TypeError(f"Unsupported or unrecognized output: {type(self.settings.log_output)}")
+        for output in self.settings.log_output:
+            if not isinstance(output, Output):
+                raise TypeError(f"Unsupported or unrecognized output: {type(output)}")
         if not isinstance(self.settings.current_log_level, Severity):
             raise TypeError(f"Unsupported or unrecognized severity: {type(self.settings.current_log_level)}")
         if self.settings.log_format == Format.JSON:
             self.settings = json_formatter(self.settings)
         if self.settings.log_format == Format.TEXT:
             self.settings = text_formatter(self.settings)
-        if self.settings.log_output == Output.STDOUT:
+        if Output.STDOUT in self.settings.log_output:
             log_to_stdout(self.settings)
-        if self.settings.log_output == Output.STDERR:
+        if Output.STDERR in self.settings.log_output:
             log_to_stderr(self.settings)
-        if self.settings.log_output == Output.FILE:
+        if Output.FILE in self.settings.log_output:
             log_to_file(self.settings.message, self.settings.log_file)
-        if self.settings.log_output == Output.SYSLOG:
+        if Output.SYSLOG in self.settings.log_output:
             log_to_sys(self.settings.message, self.settings.current_log_level)
-        if self.settings.log_output == Output.TCP:
+        if Output.TCP in self.settings.log_output:
             log_to_tcp(self.settings.message, self.settings)
+        if Output.HTTP in self.settings.log_output:
+            log_to_http(self.settings.message, self.settings)
         self.settings.message = ""
     def debug(self, message):
         self.settings.current_log_level = Severity.DBG
@@ -88,3 +92,8 @@ def log_to_tcp(message, settings):
         sock.connect((settings.tcp_output_host, settings.tcp_output_port))
         sock.sendall(bytes(message + "\n", "utf-8"))
         sock.close()
+
+def log_to_http(message, settings):
+    r = requests.post(settings.http_url, message, headers=settings.http_headers)
+    if settings.http_print_response:
+        print(r.content)
