@@ -1,7 +1,11 @@
-from .classes import Severity, Output, Format
+from .classes import Severity, Format
 
-class Settings():
+
+class Settings:
     """Class to set logging parameters"""
+
+    # pylint: disable=too-many-instance-attributes
+    # Attributes are needed for now since it's our only class. Will be revisited.
     def __init__(self):
         self.message = ""
         self.app_name = "justlog"
@@ -18,9 +22,28 @@ class Settings():
         self.http_url = ""
         self.http_headers = {}
         self.http_print_response = False
+
     def update_field(self, key, value):
-        self.fields.update({key:value})
+        """Add or update a field.
+
+        Args:
+            key: The key reference for the field"
+            value: The value for the field
+        """
+        self.fields.update({key: value})
+
     def delete_field(self, key):
+        """Delete a field.
+
+        Args:
+            key: The key of the field to delete
+        """
         del self.fields[key]
+
     def log_level_name(self):
+        """Get the current log level's name
+
+        Returns:
+           The litteral log level.
+        """
         return self.current_log_level.name

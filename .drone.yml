@@ -4,6 +4,9 @@ name: default
 steps:
 - name: build on pypi
   image: python:3.7.3-alpine3.9
+  when:
+    branch:
+    - master
   environment:
     PYPI_PW:
       from_secret: pypi-pw
@@ -14,6 +17,9 @@ steps:
 
 - name: push to Github
   image: alpine/git
+  when:
+    branch:
+    - master
   environment:
     SSH_KEY:
       from_secret: gab-key
@@ -26,7 +32,7 @@ steps:
   - chmod 400 ~/.ssh/id_rsa
   - git clone git@github.com:Gabisonfire/justlog.git /tmp/justlog
   - apk add rsync
-  - rsync -av --exclude=.git . /tmp/justlog
+  - rsync -av --exclude=.git . /tmp/justlog --delete
   - git config --global user.email "$EMAIL"
   - git config --global user.name "Gabisonfire"
   - cd /tmp/justlog
@@ -36,6 +42,9 @@ steps:
 
 - name: update doc
   image: alpine
+  when:
+    branch:
+    - master
   environment:
     TOKEN:
       from_secret: rdd-token

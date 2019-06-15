@@ -9,19 +9,31 @@ from .formatter import json_formatter, text_formatter
 
 init()
 
+
 class Logger(Settings):
+    """Holds all settings and main methods for logging."""
+
     def __init__(self, settings):
         self.settings = settings
 
     def log(self, message):
+        """Log a message.
+
+        Args:
+            message: The message to log.
+        """
         self.settings.message = message
         if not isinstance(self.settings.log_format, Format):
-            raise TypeError(f"Unsupported or unrecognized format: {type(self.settings.log_format)}")
+            raise TypeError(
+                f"Unsupported or unrecognized format: {type(self.settings.log_format)}"
+            )
         for output in self.settings.log_output:
             if not isinstance(output, Output):
                 raise TypeError(f"Unsupported or unrecognized output: {type(output)}")
         if not isinstance(self.settings.current_log_level, Severity):
-            raise TypeError(f"Unsupported or unrecognized severity: {type(self.settings.current_log_level)}")
+            raise TypeError(
+                f"Unsupported or unrecognized severity: {type(self.settings.current_log_level)}"
+            )
         if self.settings.log_format == Format.JSON:
             self.settings = json_formatter(self.settings)
         if self.settings.log_format == Format.TEXT:
@@ -39,19 +51,45 @@ class Logger(Settings):
         if Output.HTTP in self.settings.log_output:
             log_to_http(self.settings.message, self.settings)
         self.settings.message = ""
+
     def debug(self, message):
+        """Logs a message with the 'Debug' level.
+
+        Args:
+            message: The message to log.
+        """
         self.settings.current_log_level = Severity.DBG
         self.log(message)
+
     def info(self, message):
+        """Logs a message with the 'Info' level.
+
+        Args:
+            message: The message to log.
+        """
         self.settings.current_log_level = Severity.INF
         self.log(message)
+
     def warning(self, message):
+        """Logs a message with the 'Warning' level.
+
+        Args:
+            message: The message to log.
+        """
         self.settings.current_log_level = Severity.WRN
         self.log(message)
+
     def error(self, message):
+        """Logs a message with the 'Error' level.
+
+        Args:
+            message: The message to log.
+        """
         self.settings.current_log_level = Severity.ERR
         self.log(message)
 
+
+# Log to stout
 def log_to_stdout(settings: Settings):
     reset = Fore.RESET
     color = Fore.WHITE
@@ -62,6 +100,8 @@ def log_to_stdout(settings: Settings):
             color = Fore.RED
     print(f"{color}{settings.message}{reset}")
 
+
+# Log to stderr
 def log_to_stderr(settings: Settings):
     reset = Fore.RESET
     color = Fore.WHITE
@@ -72,11 +112,15 @@ def log_to_stderr(settings: Settings):
             color = Fore.RED
     print(f"{color}{settings.message}{reset}", file=sys.stderr)
 
-def log_to_file(message, log_file):
-    f = open(log_file, "a+")
-    f.write(message + "\n")
-    f.close()
 
+# Append log to file, create if non existent
+def log_to_file(message, log_file):
+    _file = open(log_file, "a+")
+    _file.write(message + "\n")
+    _file.close()
+
+
+# Send logs to syslog (journal)
 def log_to_sys(message, severity):
     if severity == Severity.DBG:
         syslog.syslog(syslog.LOG_DEBUG, message)
@@ -87,13 +131,17 @@ def log_to_sys(message, severity):
     if severity == Severity.ERR:
         syslog.syslog(syslog.LOG_ERR, message)
 
+
+# Log to tcp output using socket
 def log_to_tcp(message, settings):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
         sock.connect((settings.tcp_output_host, settings.tcp_output_port))
         sock.sendall(bytes(message + "\n", "utf-8"))
         sock.close()
 
+
+# Lof to http using POST
 def log_to_http(message, settings):
-    r = requests.post(settings.http_url, message, headers=settings.http_headers)
+    req = requests.post(settings.http_url, message, headers=settings.http_headers)
     if settings.http_print_response:
-        print(r.content)
+        print(req.content)

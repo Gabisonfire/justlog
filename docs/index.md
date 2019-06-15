@@ -59,7 +59,7 @@ Instances must be initialized with a `Settings` instance that can be customized 
     - Sets the tcp output host
 - `tcp_output_port(port: int)`
     - Sets the tcp output port
-- `http_url(url: str`
+- `http_url(url: str)`
     - Sets the http output url
 - `http_headers(header: dict)`
     - Optional headers to pass to the post request

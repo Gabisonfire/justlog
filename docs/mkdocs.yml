@@ -1,2 +1,5 @@
 site_name: justlog
-theme: readthedocs
+theme: ivory
+nav:
+    - 'Index': 'index.md'
+    - 'Release Notes': 'release.md'
