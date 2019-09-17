@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="justlog",
-    version="0.1.0",
+    version="0.1.1",
     author="Gabisonfire",
     author_email="gabisonfire@github.com",
     description="A simple logging library for Python 3",
