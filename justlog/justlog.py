@@ -1,4 +1,6 @@
-import syslog
+import platform
+if platform.system().lower().startswith('lin'):
+    import syslog
 import sys
 import socket
 import requests
@@ -122,6 +124,8 @@ def log_to_file(message, log_file):
 
 # Send logs to syslog (journal)
 def log_to_sys(message, severity):
+    if not platform.system().lower().startswith('lin'):
+        return
     if severity == Severity.DBG:
         syslog.syslog(syslog.LOG_DEBUG, message)
     if severity == Severity.INF:
